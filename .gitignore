@@ -29,4 +29,3 @@ Thumbs.db
 # Misc
 coverage/
 *.tmp
-node_modules
