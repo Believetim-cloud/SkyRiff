@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ 后端连接错误 - 立即解决</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .error-alert {
+            background: #fee;
+            border: 3px solid #f44;
+            margin: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .error-alert h2 {
+            color: #c00;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .error-alert code {
+            background: #fdd;
+            padding: 8px 15px;
+            border-radius: 8px;
+            display: inline-block;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        
+        .content {
+            padding: 30px 40px;
+        }
+        
+        .solution-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .solution-box h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .solution-box p {
+            text-align: center;
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        
+        .steps {
+            margin-top: 30px;
+        }
+        
+        .step {
+            background: white;
+            color: #333;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .step:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .step h3 {
+            display: inline;
+            color: #667eea;
+            font-size: 1.3em;
+        }
+        
+        .step-content {
+            margin-top: 15px;
+            padding-left: 55px;
+            font-size: 1.05em;
+            line-height: 1.8;
+        }
+        
+        .file-path {
+            background: #f5f5f5;
+            border: 2px dashed #667eea;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            font-size: 0.95em;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .success-indicator {
+            background: #e6ffed;
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .success-indicator h4 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .code {
+            background: #2d3748;
+            color: #68d391;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            font-size: 0.95em;
+            overflow-x: auto;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            color: #856404;
+        }
+        
+        .warning strong {
+            color: #f57c00;
+        }
+        
+        .alternatives {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .alternatives h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+        
+        .alt-option {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 2px solid #dee2e6;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            border-top: 3px solid #667eea;
+        }
+        
+        .footer h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 20px 10px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #ffc107 0%, #ff9800 100%);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ 后端连接错误</h1>
+            <p style="font-size: 1.3em; margin-top: 10px;">3步快速解决</p>
+        </div>
+        
+        <div class="error-alert">
+            <h2>❌ 您遇到的错误</h2>
+            <p>充值和购买功能无法使用</p>
+            <code>Error: 无法连接到后端服务（http://localhost:8000）</code>
+        </div>
+        
+        <div class="content">
+            <div class="solution-box">
+                <h2>✅ 超简单解决方案</h2>
+                <p>只需双击一个文件，<span class="highlight">30秒</span>搞定！</p>
+            </div>
+            
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <h3>找到启动脚本</h3>
+                    <div class="step-content">
+                        <p>在项目根目录找到这个文件：</p>
+                        <div class="file-path">
+                            📁 D:\Figma_skyriff\⚡一键启动后端-双击我.bat
+                        </div>
+                        <p style="margin-top: 10px; color: #666;">
+                            💡 提示：这个文件就在项目根目录，和 backend、src 文件夹在同一层
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <h3>双击运行脚本</h3>
+                    <div class="step-content">
+                        <p>双击文件，脚本会自动完成：</p>
+                        <ul style="margin: 15px 0; line-height: 2;">
+                            <li>✅ 检查 Python 环境</li>
+                            <li>✅ 自动安装依赖包</li>
+                            <li>✅ 初始化数据库</li>
+                            <li>✅ 启动后端服务</li>
+                        </ul>
+                        <div class="warning">
+                            <strong>⚠️ 重要提示：</strong>
+                            <ul style="margin-top: 10px; line-height: 1.8;">
+                                <li>启动后请保持命令行窗口打开</li>
+                                <li>关闭窗口会停止后端服务</li>
+                                <li>如果窗口一闪而过，可能是 Python 未安装</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <h3>确认启动成功</h3>
+                    <div class="step-content">
+                        <div class="success-indicator">
+                            <h4>✅ 看到以下提示就成功了：</h4>
+                            <div class="code">
+                                INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)<br>
+                                INFO:     Application startup complete.
+                            </div>
+                        </div>
+                        <p style="margin-top: 15px;">然后：</p>
+                        <ul style="margin: 10px 0; line-height: 2;">
+                            <li>✅ 回到前端页面（浏览器）</li>
+                            <li>✅ 页面会自动检测到后端服务</li>
+                            <li>✅ 显示绿色"后端服务运行正常"</li>
+                            <li>✅ 充值和购买功能恢复正常</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alternatives">
+                <h3>🔄 其他启动方式</h3>
+                
+                <div class="alt-option">
+                    <strong>方式 2：使用后端目录的脚本</strong>
+                    <div class="file-path" style="margin-top: 10px;">
+                        📁 D:\Figma_skyriff\backend\启动后端.bat
+                    </div>
+                    <p style="margin-top: 10px; color: #666;">
+                        或者 <code>setup_and_start.bat</code>（首次推荐）
+                    </p>
+                </div>
+                
+                <div class="alt-option">
+                    <strong>方式 3：使用命令行（开发者）</strong>
+                    <div class="code" style="margin-top: 10px;">
+                        cd D:\Figma_skyriff\backend<br>
+                        python init_database.py<br>
+                        uvicorn app.main:app --reload
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <h3>🎯 后端启动成功后，下一步：</h3>
+            <p style="font-size: 1.1em; margin: 20px 0; color: #555;">
+                回到前端页面，按 <code style="background: #eee; padding: 3px 8px; border-radius: 3px;">Ctrl + Shift + T</code> 打开测试控制台
+            </p>
+            <div style="margin-top: 30px;">
+                <a href="http://localhost:8000/health" class="cta-button" target="_blank">
+                    🔍 检查后端状态
+                </a>
+                <a href="http://localhost:8000/docs" class="cta-button" target="_blank">
+                    📖 查看 API 文档
+                </a>
+            </div>
+            <p style="margin-top: 30px; font-size: 1.2em; color: #667eea; font-weight: bold;">
+                祝您启动顺利！🚀
+            </p>
+        </div>
+    </div>
+</body>
+</html>

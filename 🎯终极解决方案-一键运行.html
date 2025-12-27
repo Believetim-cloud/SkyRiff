@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 终极解决方案 - 一键启动</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 30px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .method {
+            background: #f9fafb;
+            border: 3px solid #10b981;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .method h2 {
+            color: #065f46;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .step {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .step h3 {
+            color: #1f2937;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .step p {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .code-box {
+            background: #1e293b;
+            color: #10b981;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            margin: 15px 0;
+            position: relative;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .copy-btn:hover {
+            background: #059669;
+        }
+        
+        .copy-btn.copied {
+            background: #3b82f6;
+        }
+        
+        .warning {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .warning h3 {
+            color: #92400e;
+            margin-bottom: 10px;
+        }
+        
+        .warning p {
+            color: #92400e;
+            line-height: 1.6;
+        }
+        
+        .btn-big {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 25px;
+            border-radius: 16px;
+            font-size: 22px;
+            font-weight: 700;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: all 0.2s;
+        }
+        
+        .btn-big:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4);
+        }
+        
+        .success {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .success h3 {
+            color: #065f46;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .success p {
+            color: #047857;
+            text-align: center;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="font-size: 64px; margin-bottom: 15px;">🎯</div>
+            <h1>终极解决方案</h1>
+            <p style="font-size: 18px; margin-top: 10px;">不需要双击文件，直接运行命令！</p>
+        </div>
+        
+        <div class="content">
+            <div class="warning">
+                <h3>⚠️ 为什么双击会变成TXT？</h3>
+                <p>您的电脑上 .bat 和 .vbs 文件被关联到了文本编辑器。而且 Figma Make 系统无法创建这些文件类型（会自动添加 .tsx 扩展名）。</p>
+                <p style="margin-top: 10px;"><strong>解决方案：不需要双击文件，直接用下面的方法！</strong></p>
+            </div>
+            
+            <!-- 方法1：Win+R 直接运行 -->
+            <div class="method">
+                <h2>🚀 方法1：Win+R 一键运行（最简单！）</h2>
+                
+                <div class="step">
+                    <h3>第1步：复制这个命令</h3>
+                    <div class="code-box" id="cmd1">cmd /c "cd /d "%USERPROFILE%\Desktop\skyriff\server" && npm install && npm start"<button class="copy-btn" onclick="copyText('cmd1', this)">复制</button></div>
+                    <p style="color: #ef4444; font-weight: 600;">⚠️ 重要：请把命令中的路径改成您项目的实际路径！</p>
+                </div>
+                
+                <div class="step">
+                    <h3>第2步：按 Win+R</h3>
+                    <p>按键盘上的 <strong>Win 键 + R 键</strong>，会弹出"运行"对话框</p>
+                </div>
+                
+                <div class="step">
+                    <h3>第3步：粘贴命令</h3>
+                    <p>在"运行"对话框中按 <strong>Ctrl+V</strong> 粘贴命令</p>
+                </div>
+                
+                <div class="step">
+                    <h3>第4步：按回车</h3>
+                    <p>按 <strong>Enter 回车键</strong>，服务器会自动启动！</p>
+                </div>
+                
+                <div class="success">
+                    <h3>✅ 优点</h3>
+                    <p>• 不需要创建任何文件<br>• 不需要双击<br>• 一个命令搞定！</p>
+                </div>
+            </div>
+            
+            <!-- 方法2：创建.bat文件（手动） -->
+            <div class="method">
+                <h2>📝 方法2：手动创建 .bat 文件</h2>
+                
+                <div class="step">
+                    <h3>第1步：打开记事本</h3>
+                    <p>按 Win+R，输入 <strong>notepad</strong>，回车</p>
+                </div>
+                
+                <div class="step">
+                    <h3>第2步：复制粘贴这些代码</h3>
+                    <div class="code-box" id="bat-code">@echo off
+chcp 65001 >nul
+cd /d "%~dp0"
+echo.
+echo ========================================
+echo    SkyRiff 服务器启动中...
+echo ========================================
+echo.
+if not exist "node_modules" (
+    echo [安装] 首次运行，正在安装依赖...
+    call npm install
+)
+echo [启动] 正在启动服务器...
+npm start
+pause<button class="copy-btn" onclick="copyText('bat-code', this)">复制</button></div>
+                </div>
+                
+                <div class="step">
+                    <h3>第3步：保存文件</h3>
+                    <p>1. 点击"文件" → "另存为"</p>
+                    <p>2. 文件名输入：<strong>启动服务器.bat</strong>（注意扩展名是 .bat）</p>
+                    <p>3. "保存类型"选择：<strong>所有文件(*.*)</strong></p>
+                    <p>4. 保存位置：选择项目的 <strong>server 文件夹</strong></p>
+                    <p>5. 点击"保存"</p>
+                </div>
+                
+                <div class="step">
+                    <h3>第4步：运行文件</h3>
+                    <p><strong>右键点击</strong> 启动服务器.bat → 选择 <strong>"运行"</strong></p>
+                    <p style="color: #ef4444; font-weight: 600;">注意：右键运行，不要双击！</p>
+                </div>
+            </div>
+            
+            <!-- 方法3：VSCode终端 -->
+            <div class="method">
+                <h2>💻 方法3：VS Code 终端（开发者推荐）</h2>
+                
+                <div class="step">
+                    <h3>第1步：用 VS Code 打开项目</h3>
+                    <p>右键项目文件夹 → "通过 Code 打开"</p>
+                </div>
+                
+                <div class="step">
+                    <h3>第2步：打开终端</h3>
+                    <p>按 <strong>Ctrl + `</strong>（反引号，ESC键下面那个）</p>
+                    <p>或者菜单：终端 → 新建终端</p>
+                </div>
+                
+                <div class="step">
+                    <h3>第3步：复制粘贴命令</h3>
+                    <div class="code-box" id="vscode-cmd">cd server && npm install && npm start<button class="copy-btn" onclick="copyText('vscode-cmd', this)">复制</button></div>
+                </div>
+                
+                <div class="step">
+                    <h3>第4步：按回车</h3>
+                    <p>服务器会自动启动！</p>
+                </div>
+            </div>
+            
+            <!-- 成功标志 -->
+            <div class="success">
+                <h3>✅ 成功标志</h3>
+                <p>无论用哪个方法，看到这个就成功了：</p>
+                <div class="code-box" style="margin-top: 15px;">🚀 SkyRiff Real API Server 已启动！
+📡 服务地址: http://localhost:3001
+✅ 准备就绪！</div>
+            </div>
+            
+            <button class="btn-big" onclick="window.location.reload()">
+                🔄 刷新浏览器，开始使用
+            </button>
+            
+            <div class="warning" style="background: #dbeafe; border-color: #3b82f6;">
+                <h3 style="color: #1e40af;">💡 我的推荐</h3>
+                <p style="color: #1e3a8a;"><strong>方法1（Win+R 直接运行）</strong> 最简单！</p>
+                <p style="color: #1e3a8a; margin-top: 10px;">只需要复制命令，Win+R，粘贴，回车！</p>
+                <p style="color: #1e3a8a; margin-top: 10px;">如果您是开发者，<strong>方法3（VS Code）</strong> 最方便！</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function copyText(elementId, button) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent.replace('复制', '').trim();
+            
+            // 创建临时文本区域
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-999999px';
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                button.textContent = '已复制 ✓';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = '复制';
+                    button.classList.remove('copied');
+                }, 2000);
+            } catch (err) {
+                alert('复制失败，请手动选择文本复制');
+            }
+            
+            document.body.removeChild(textarea);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SkyRiff 前端测试工具</title>
+<style>
+:root{--bg:#0b0f14;--panel:#141922;--muted:#8aa0b4;--text:#e2edf7;--accent:#6ee7ff;--ok:#22c55e;--err:#ef4444}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#0b0f14,#0e131a);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+.header{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.brand{display:flex;gap:10px;align-items:center}
+.brand .dot{width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#6ee7ff,#4c68ff)}
+.brand h1{margin:0;font-size:18px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:var(--panel);border:1px solid #223042;border-radius:10px;padding:12px}
+.card h2{margin:0 0 10px 0;font-size:14px;color:#cfe7ff}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+input,select{background:#0f141b;border:1px solid #2a3a4a;color:var(--text);padding:8px 10px;border-radius:8px;outline:none;min-width:0}
+input:focus{border-color:#4c68ff}
+button{background:linear-gradient(90deg,#2a7fff,#5ad7ff);color:#042133;border:none;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:600}
+button:disabled{opacity:.5;cursor:not-allowed}
+.muted{color:var(--muted);font-size:12px}
+.status{display:flex;gap:6px;align-items:center;font-size:12px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;border:1px solid #29465e;background:#0f1620}
+.ok{color:var(--ok)}
+.err{color:var(--err)}
+.list{display:flex;flex-direction:column;gap:8px}
+.item{border:1px solid #244257;background:#0d141c;padding:8px;border-radius:8px}
+.logs{height:280px;overflow:auto;background:#0a0f15;border:1px solid #223042;border-radius:8px;padding:8px;font-family:ui-monospace,Menlo,Consolas;font-size:12px}
+.code{background:#0a0f15;border:1px solid #223042;border-radius:8px;padding:8px;font-family:ui-monospace,Menlo,Consolas;font-size:12px}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.footer{margin-top:12px;display:flex;justify-content:space-between;align-items:center}
+pre{margin:0;white-space:pre-wrap;word-break:break-word}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="brand">
+      <div class="dot"></div>
+      <h1>SkyRiff 前端测试工具</h1>
+    </div>
+    <div class="status">
+      <span class="badge" id="healthBadge">后端状态: 检查中</span>
+      <button id="runAll">一键自动测试</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <span class="muted">后端地址</span>
+      <input id="baseUrl" value="http://127.0.0.1:8000/api/v1" style="width:360px">
+      <button id="saveBase">保存</button>
+      <span class="muted" id="tokenPreview">Token: 未登录</span>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>认证</h2>
+      <div class="row">
+        <input id="mockUserId" type="number" value="1" style="width:120px">
+        <button id="loginMock">模拟登录</button>
+      </div>
+      <div class="row">
+        <input id="phone" placeholder="手机号" style="width:180px">
+        <input id="code" placeholder="验证码" style="width:140px">
+        <button id="sendSms">发送验证码</button>
+        <button id="loginPhone">手机登录</button>
+      </div>
+      <div class="list" id="authResult"></div>
+    </div>
+
+    <div class="card">
+      <h2>钱包</h2>
+      <div class="actions">
+        <button id="getWallet">获取钱包</button>
+      </div>
+      <div class="list" id="walletResult"></div>
+    </div>
+
+    <div class="card">
+      <h2>商品与支付</h2>
+      <div class="actions">
+        <button id="getRecharge">获取充值商品</button>
+        <button id="getSubscription">获取月卡商品</button>
+        <button id="createPayment">创建支付单(首个充值商品)</button>
+        <button id="callbackSuccess">模拟支付成功</button>
+      </div>
+      <div class="list" id="productResult"></div>
+    </div>
+
+    <div class="card">
+      <h2>月卡</h2>
+      <div class="actions">
+        <button id="getSub">获取我的月卡</button>
+        <button id="claimDaily">每日领取积分</button>
+      </div>
+      <div class="list" id="subResult"></div>
+    </div>
+
+    <div class="card">
+      <h2>任务中心</h2>
+      <div class="actions">
+        <button id="getTasks">获取今日任务</button>
+        <button id="completeFirst">完成第一个任务</button>
+        <button id="claimFirst">领取第一个任务奖励</button>
+      </div>
+      <div class="list" id="taskResult"></div>
+    </div>
+
+    <div class="card">
+      <h2>用户</h2>
+      <div class="actions">
+        <button id="getMe">获取我的资料</button>
+      </div>
+      <div class="list" id="userResult"></div>
+    </div>
+
+    <div class="card">
+      <h2>生成视频</h2>
+      <div class="row">
+        <input id="genPrompt" placeholder="提示词：例如 一只猫在草地上奔跑" style="flex:1">
+      </div>
+      <div class="row">
+        <select id="genDuration">
+          <option value="10">10秒</option>
+          <option value="15">15秒</option>
+          <option value="25">25秒</option>
+        </select>
+        <select id="genOrientation">
+          <option value="portrait">竖屏 9:16</option>
+          <option value="landscape">横屏 16:9</option>
+        </select>
+        <button id="createGenTask">创建任务</button>
+        <button id="pollGenTask">轮询进度</button>
+      </div>
+      <div class="list" id="genResult"></div>
+    </div>
+
+    <div class="card">
+      <h2>图生视频（上传图片）</h2>
+      <div class="row">
+        <input id="imgPrompt" placeholder="提示词：例如 让画面动起来" style="flex:1">
+      </div>
+      <div class="row">
+        <input id="imgFile" type="file" accept="image/*">
+        <select id="imgDuration">
+          <option value="10">10秒</option>
+          <option value="15">15秒</option>
+          <option value="25">25秒</option>
+        </select>
+        <select id="imgOrientation">
+          <option value="portrait">竖屏 9:16</option>
+          <option value="landscape">横屏 16:9</option>
+        </select>
+      </div>
+      <div class="actions">
+        <button id="uploadAndCreate">上传并创建任务</button>
+        <button id="pollImgTask">轮询进度</button>
+      </div>
+      <div class="list" id="imgResult"></div>
+    </div>
+
+    <div class="card">
+      <h2>播放器</h2>
+      <div class="list">
+        <video id="videoPlayer" controls playsinline style="width:100%;max-height:60vh;border-radius:12px;background:#000" crossorigin="anonymous"></video>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <h2>日志</h2>
+    <div class="logs" id="logs"></div>
+  </div>
+
+  <div class="footer">
+    <div class="muted">快捷入口: http://127.0.0.1:5500/test-tool.html</div>
+    <button id="clearToken">清除登录信息</button>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id)
+const log = m => { const t = new Date().toLocaleTimeString('zh-CN',{hour12:false}); $('logs').innerHTML += `<div>[${t}] ${m}</div>`; $('logs').scrollTop = $('logs').scrollHeight }
+let BASE = localStorage.getItem('sr_base') || $('baseUrl').value
+// 强制迁移到新端口
+if (BASE.includes(':8000')) {
+  BASE = BASE.replace(':8000', ':8001')
+  localStorage.setItem('sr_base', BASE)
+  $('baseUrl').value = BASE
+}
+let TOKEN = localStorage.getItem('auth_token') || null
+let lastPaymentId = null
+let lastTasks = []
+let lastGenTaskId = null
+let lastImgTaskId = null
+let genPollTimer = null
+let imgPollTimer = null
+$('baseUrl').value = BASE
+updateTokenPreview()
+
+async function health() {
+  try {
+    const r = await fetch(BASE.replace('/api/v1','') + '/health')
+    if (r.ok) {
+      $('healthBadge').textContent = '后端状态: 运行中'
+      $('healthBadge').style.color = 'var(--ok)'
+    } else {
+      $('healthBadge').textContent = '后端状态: 未连接'
+      $('healthBadge').style.color = 'var(--err)'
+    }
+  } catch {
+    $('healthBadge').textContent = '后端状态: 未连接'
+    $('healthBadge').style.color = 'var(--err)'
+  }
+}
+
+function updateTokenPreview(){
+  $('tokenPreview').textContent = TOKEN ? 'Token: ' + TOKEN.slice(0,24) + '...' : 'Token: 未登录'
+}
+
+function headers(extra){
+  const h = {'Content-Type':'application/json'}
+  if (TOKEN) h['Authorization'] = 'Bearer ' + TOKEN
+  return Object.assign(h, extra||{})
+}
+
+async function req(ep,opt){
+  const url = BASE + ep
+  const r = await fetch(url,Object.assign({headers:headers(),method:'GET'},opt||{}))
+  if (!r.ok) {
+    let err = '请求失败: ' + r.status
+    try { const j = await r.json(); err = j.detail || err } catch {}
+    throw new Error(err)
+  }
+  return r.json()
+}
+
+$('saveBase').onclick = () => { BASE = $('baseUrl').value; localStorage.setItem('sr_base', BASE); log('已保存后端地址: ' + BASE); health() }
+$('clearToken').onclick = () => { TOKEN = null; localStorage.removeItem('auth_token'); updateTokenPreview(); log('已清除登录信息') }
+$('runAll').onclick = async () => {
+  $('runAll').disabled = true
+  try {
+    await actions.loginMock()
+    await actions.getWallet()
+    await actions.getRecharge()
+    await actions.createPayment()
+    await actions.callbackSuccess()
+    await actions.getSub()
+    await actions.claimDaily()
+    await actions.getTasks()
+    await actions.completeFirst()
+    await actions.claimFirst()
+    await actions.getMe()
+    log('自动测试完成')
+  } catch(e){ log('自动测试中断: ' + e.message) }
+  $('runAll').disabled = false
+}
+
+const actions = {
+  loginMock: async () => {
+    const uid = parseInt($('mockUserId').value||'1',10)
+    log('模拟登录: user_id=' + uid)
+    const res = await req('/auth/login_mock',{method:'POST',body:JSON.stringify({user_id:uid})})
+    if (res.data && res.data.access_token) {
+      TOKEN = res.data.access_token
+      localStorage.setItem('auth_token', TOKEN)
+      updateTokenPreview()
+      $('authResult').innerHTML = `<div class="item">登录成功 user_id=${res.data.user_id}</div>`
+      log('登录成功')
+    } else {
+      throw new Error('登录响应错误')
+    }
+  },
+  sendSms: async () => {
+    const phone = $('phone').value
+    if (!phone) { log('请输入手机号'); return }
+    log('发送验证码到 ' + phone)
+    const res = await req('/auth/send_sms',{method:'POST',body:JSON.stringify({phone, purpose:'login'})})
+    $('authResult').innerHTML = `<div class="item">发送验证码: ${res.message||'OK'}</div>`
+    log('开发环境验证码打印在后端控制台')
+  },
+  loginPhone: async () => {
+    const phone = $('phone').value
+    const code = $('code').value
+    if (!phone || !code) { log('请输入手机号和验证码'); return }
+    log('手机登录 ' + phone)
+    const res = await req('/auth/login/phone',{method:'POST',body:JSON.stringify({phone, code})})
+    if (res.data && res.data.token) {
+      TOKEN = res.data.token
+      localStorage.setItem('auth_token', TOKEN)
+      updateTokenPreview()
+      $('authResult').innerHTML = `<div class="item">手机登录成功 user_id=${res.data.user_id}</div>`
+    } else {
+      throw new Error('登录响应错误')
+    }
+  },
+  getWallet: async () => {
+    log('获取钱包')
+    const res = await req('/wallets/me')
+    $('walletResult').innerHTML = `<div class="item"><pre>${JSON.stringify(res.data,null,2)}</pre></div>`
+    log('钱包余额 Credits=' + (res.data.credits||0) + ' Coins=' + (res.data.coins_available||'0'))
+  },
+  getRecharge: async () => {
+    log('拉取充值商品')
+    const res = await req('/products?product_type=recharge')
+    $('productResult').innerHTML = `<div class="item">充值商品数量 ${res.data.items.length}</div>`
+    localStorage.setItem('sr_recharge_items', JSON.stringify(res.data.items||[]))
+  },
+  getSubscription: async () => {
+    log('拉取月卡商品')
+    const res = await req('/products?product_type=subscription')
+    $('productResult').innerHTML += `<div class="item">月卡商品数量 ${res.data.items.length}</div>`
+  },
+  createPayment: async () => {
+    const items = JSON.parse(localStorage.getItem('sr_recharge_items')||'[]')
+    if (!items.length) { log('没有充值商品'); return }
+    const pid = items[0].product_id
+    log('创建支付单 product_id=' + pid)
+    const res = await req('/payments/create',{method:'POST',body:JSON.stringify({product_id:pid, pay_channel:'mock'})})
+    lastPaymentId = res.data.payment_id
+    $('productResult').innerHTML += `<div class="item">支付单创建成功 ID=${lastPaymentId}</div>`
+  },
+  callbackSuccess: async () => {
+    if (!lastPaymentId) { log('请先创建支付单'); return }
+    log('模拟支付成功 id=' + lastPaymentId)
+    const res = await req('/payments/callback',{method:'POST',body:JSON.stringify({payment_id:lastPaymentId, success:true})})
+    $('productResult').innerHTML += `<div class="item">支付状态 ${res.data.status}</div>`
+  },
+  getSub: async () => {
+    log('查询月卡状态')
+    const res = await req('/subscriptions/me')
+    $('subResult').innerHTML = `<div class="item"><pre>${JSON.stringify(res.data,null,2)}</pre></div>`
+  },
+  claimDaily: async () => {
+    log('每日领取积分')
+    const res = await req('/subscriptions/claim_daily',{method:'POST'})
+    $('subResult').innerHTML += `<div class="item">领取成功 ${res.data.credits_amount} Credits</div>`
+  },
+  getTasks: async () => {
+    log('获取今日任务')
+    const res = await req('/tasks_center/today')
+    lastTasks = res.data.items||[]
+    $('taskResult').innerHTML = `<div class="item">任务数量 ${lastTasks.length}</div>`
+  },
+  completeFirst: async () => {
+    if (!lastTasks.length) { log('没有任务'); return }
+    const t = lastTasks[0]
+    log('完成任务 ' + t.task_key)
+    const res = await req('/tasks_center/'+t.task_key+'/complete',{method:'POST'})
+    $('taskResult').innerHTML += `<div class="item">完成成功 ${t.task_key}</div>`
+  },
+  claimFirst: async () => {
+    if (!lastTasks.length) { log('没有任务'); return }
+    const t = lastTasks[0]
+    log('领取奖励 ' + t.task_key)
+    const res = await req('/tasks_center/'+t.task_key+'/claim',{method:'POST'})
+    $('taskResult').innerHTML += `<div class="item">奖励 ${res.data.reward_credits||0} Credits</div>`
+  },
+  getMe: async () => {
+    log('获取用户资料')
+    const res = await req('/users/me')
+    $('userResult').innerHTML = `<div class="item"><pre>${JSON.stringify(res.data,null,2)}</pre></div>`
+  },
+  createGenTask: async () => {
+    const prompt = $('genPrompt').value.trim()
+    if (!prompt) { log('请输入提示词'); return }
+    const duration = parseInt(($('genDuration').value||'10'),10)
+    const orientation = $('genOrientation').value
+    const ratio = orientation === 'portrait' ? '9:16' : '16:9'
+    log(`创建生成任务：${duration}s ${ratio}`)
+    const res = await req('/tasks/create',{method:'POST',body:JSON.stringify({prompt,duration_sec:duration,ratio})})
+    if (res.code === 200 && res.data?.task_id) {
+      lastGenTaskId = res.data.task_id
+      $('genResult').innerHTML = `<div class="item">任务创建成功 ID=${lastGenTaskId}</div>`
+      if (genPollTimer) { clearInterval(genPollTimer) }
+      genPollTimer = setInterval(() => actions.pollGenTask().catch(e=>log('错误: '+e.message)), 5000)
+    } else {
+      $('genResult').innerHTML = `<div class="item">任务创建失败</div>`
+    }
+  },
+  pollGenTask: async () => {
+    if (!lastGenTaskId) { log('请先创建任务'); return }
+    log(`轮询任务进度：${lastGenTaskId}`)
+    const res = await req(`/tasks/${lastGenTaskId}`)
+    if (res.code === 200 && res.data) {
+      const d = res.data
+      $('genResult').innerHTML += `<div class="item">状态 ${d.status} 进度 ${d.progress || 0}%</div>`
+      if (d.status === 'SUCCESS' && d.video_id) {
+        try {
+          const v = await req(`/assets/videos/${d.video_id}`)
+          const url = v.data?.watermarked_play_url
+          $('genResult').innerHTML += `<div class="item">播放链接<br><div class="code">${url||'无'}</div></div>`
+          if (url) {
+            const vp = $('videoPlayer')
+            vp.src = url
+            try { vp.play() } catch(e){}
+          }
+          if (genPollTimer) { clearInterval(genPollTimer) }
+        } catch(e) {}
+      }
+    } else {
+      $('genResult').innerHTML += `<div class="item">查询失败</div>`
+    }
+  },
+  uploadAndCreate: async () => {
+    const fileInput = $('imgFile')
+    const file = fileInput.files && fileInput.files[0]
+    const prompt = $('imgPrompt').value.trim()
+    if (!TOKEN) { log('请先登录'); return }
+    if (!file) { log('请选择图片文件'); return }
+    if (!prompt) { log('请输入提示词'); return }
+    const duration = parseInt(($('imgDuration').value||'10'),10)
+    const orientation = $('imgOrientation').value
+    const ratio = orientation === 'portrait' ? '9:16' : '16:9'
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      const headers = TOKEN ? { 'Authorization': 'Bearer ' + TOKEN } : {}
+      const uploadResp = await fetch(BASE + '/assets/media/upload', {
+        method: 'POST',
+        body: formData,
+        headers
+      })
+      if (!uploadResp.ok) {
+        const err = await uploadResp.text()
+        throw new Error(err)
+      }
+      const uploadJson = await uploadResp.json()
+      const assetId = uploadJson?.data?.asset_id
+      if (!assetId) throw new Error('上传失败：未返回asset_id')
+      $('imgResult').innerHTML = `<div class="item">上传成功 asset_id=${assetId}</div>`
+      const createResp = await req('/tasks/create', {
+        method: 'POST',
+        body: JSON.stringify({ prompt, duration_sec: duration, ratio, reference_image_asset_id: assetId })
+      })
+      if (createResp.code === 200 && createResp.data?.task_id) {
+        lastImgTaskId = createResp.data.task_id
+        $('imgResult').innerHTML += `<div class="item">任务创建成功 ID=${lastImgTaskId}</div>`
+        if (imgPollTimer) { clearInterval(imgPollTimer) }
+        imgPollTimer = setInterval(() => actions.pollImgTask().catch(e=>log('错误: '+e.message)), 5000)
+      } else {
+        $('imgResult').innerHTML += `<div class="item">任务创建失败</div>`
+      }
+    } catch (e) {
+      $('imgResult').innerHTML = `<div class="item">错误：${e.message||e}</div>`
+    }
+  },
+  pollImgTask: async () => {
+    if (!lastImgTaskId) { log('请先创建任务'); return }
+    const res = await req(`/tasks/${lastImgTaskId}`)
+    if (res.code === 200 && res.data) {
+      const d = res.data
+      $('imgResult').innerHTML += `<div class="item">状态 ${d.status} 进度 ${d.progress || 0}%</div>`
+      if (d.status === 'SUCCESS' && d.video_id) {
+        try {
+          const v = await req(`/assets/videos/${d.video_id}`)
+          const url = v.data?.watermarked_play_url
+          $('imgResult').innerHTML += `<div class="item">播放链接<br><div class="code">${url||'无'}</div></div>`
+          if (url) {
+            const vp = $('videoPlayer')
+            vp.src = url
+            try { vp.play() } catch(e){}
+          }
+          if (imgPollTimer) { clearInterval(imgPollTimer) }
+        } catch(e) {}
+      }
+    } else {
+      $('imgResult').innerHTML += `<div class="item">查询失败</div>`
+    }
+  }
+}
+
+$('loginMock').onclick = () => actions.loginMock().catch(e=>log('错误: '+e.message))
+$('sendSms').onclick = () => actions.sendSms().catch(e=>log('错误: '+e.message))
+$('loginPhone').onclick = () => actions.loginPhone().catch(e=>log('错误: '+e.message))
+$('getWallet').onclick = () => actions.getWallet().catch(e=>log('错误: '+e.message))
+$('getRecharge').onclick = () => actions.getRecharge().catch(e=>log('错误: '+e.message))
+$('getSubscription').onclick = () => actions.getSubscription().catch(e=>log('错误: '+e.message))
+$('createPayment').onclick = () => actions.createPayment().catch(e=>log('错误: '+e.message))
+$('callbackSuccess').onclick = () => actions.callbackSuccess().catch(e=>log('错误: '+e.message))
+$('getSub').onclick = () => actions.getSub().catch(e=>log('错误: '+e.message))
+$('claimDaily').onclick = () => actions.claimDaily().catch(e=>log('错误: '+e.message))
+$('getTasks').onclick = () => actions.getTasks().catch(e=>log('错误: '+e.message))
+$('completeFirst').onclick = () => actions.completeFirst().catch(e=>log('错误: '+e.message))
+$('claimFirst').onclick = () => actions.claimFirst().catch(e=>log('错误: '+e.message))
+$('getMe').onclick = () => actions.getMe().catch(e=>log('错误: '+e.message))
+$('createGenTask').onclick = () => actions.createGenTask().catch(e=>log('错误: '+e.message))
+$('pollGenTask').onclick = () => actions.pollGenTask().catch(e=>log('错误: '+e.message))
+$('uploadAndCreate').onclick = () => actions.uploadAndCreate().catch(e=>log('错误: '+e.message))
+$('pollImgTask').onclick = () => actions.pollImgTask().catch(e=>log('错误: '+e.message))
+
+health()
+setInterval(health,5000)
+</script>
+</body>
+</html>

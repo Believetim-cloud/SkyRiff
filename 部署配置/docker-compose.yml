@@ -1,0 +1,114 @@
+# SkyRiff 完整部署配置
+# 使用 docker-compose up -d 启动
+
+version: '3.8'
+
+services:
+  # ========== 前端服务 ==========
+  frontend:
+    build:
+      context: ..
+      dockerfile: 部署配置/Dockerfile.frontend
+    container_name: skyriff-frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - skyriff-network
+
+  # ========== 后端服务 ==========
+  backend:
+    build:
+      context: ../backend
+      dockerfile: ../部署配置/Dockerfile.backend
+    container_name: skyriff-backend
+    ports:
+      - "8000:8000"
+    environment:
+      # 数据库配置
+      - DATABASE_URL=postgresql://skyriff:skyriff_password@db:5432/skyriff
+      # Redis 配置
+      - REDIS_URL=redis://redis:6379/0
+      # JWT 密钥（生产环境必须修改！）
+      - SECRET_KEY=CHANGE_THIS_IN_PRODUCTION_SUPER_SECRET_KEY_123456
+      # 环境
+      - ENVIRONMENT=production
+      - DEBUG=false
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - skyriff-network
+
+  # ========== PostgreSQL 数据库 ==========
+  db:
+    image: postgres:15-alpine
+    container_name: skyriff-db
+    environment:
+      - POSTGRES_DB=skyriff
+      - POSTGRES_USER=skyriff
+      - POSTGRES_PASSWORD=skyriff_password
+      - POSTGRES_INITDB_ARGS=-E UTF8
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skyriff"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - skyriff-network
+
+  # ========== Redis 缓存 ==========
+  redis:
+    image: redis:7-alpine
+    container_name: skyriff-redis
+    command: redis-server --appendonly yes --requirepass redis_password
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - skyriff-network
+
+  # ========== Nginx 负载均衡（可选）==========
+  nginx-lb:
+    image: nginx:alpine
+    container_name: skyriff-lb
+    volumes:
+      - ./nginx-lb.conf:/etc/nginx/nginx.conf
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - skyriff-network
+
+# ========== 数据卷 ==========
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+# ========== 网络 ==========
+networks:
+  skyriff-network:
+    driver: bridge

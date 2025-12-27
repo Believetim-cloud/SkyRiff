@@ -1,0 +1,31 @@
+# Node / Frontend
+node_modules/
+dist/
+.vite/
+*.log
+
+# Python / Backend
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Environment and secrets
+.env
+.env.*
+*.key
+*.pem
+
+# Static/generated media (excluded per request)
+backend/static/
+backend/uploads/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Misc
+coverage/
+*.tmp

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyRiff 服务器启动助手</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .status {
+            padding: 20px 30px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .status-online {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-offline {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-online .status-dot {
+            background: #10b981;
+        }
+        
+        .status-offline .status-dot {
+            background: #ef4444;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .step {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .step-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: #111827;
+        }
+        
+        .code-box {
+            background: #1e293b;
+            color: #10b981;
+            padding: 16px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 12px 0;
+            position: relative;
+            overflow-x: auto;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background: #5568d3;
+            transform: scale(1.05);
+        }
+        
+        .copy-btn.copied {
+            background: #10b981;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .tip {
+            background: #dbeafe;
+            border: 1px solid #3b82f6;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #1e40af;
+        }
+        
+        .success-message {
+            display: none;
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        .success-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 SkyRiff 服务器启动助手</h1>
+            <p>一键启动后端服务器，开始创作精彩视频</p>
+        </div>
+        
+        <div class="status">
+            <div id="status-badge" class="status-badge status-offline">
+                <span class="status-dot"></span>
+                <span>服务器离线</span>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div id="success-message" class="success-message">
+                <div class="success-icon">✅</div>
+                <div style="font-weight: 600; font-size: 18px; color: #065f46; margin-bottom: 8px;">
+                    服务器已启动！
+                </div>
+                <div style="color: #047857; font-size: 14px;">
+                    现在可以刷新前端页面开始使用了
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-title">打开命令提示符</div>
+                </div>
+                <p style="color: #6b7280; font-size: 14px; margin-left: 44px;">
+                    按 <strong>Win + R</strong>，输入 <strong>cmd</strong>，按回车
+                </p>
+            </div>
+            
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-title">⚠️ 重要：进入项目文件夹</div>
+                </div>
+                <div style="margin-left: 44px;">
+                    <div style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+                        <p style="color: #92400e; font-size: 13px; margin-bottom: 8px;">
+                            <strong>方法1（推荐）：</strong>在文件管理器中，按住 <strong>Shift + 右键</strong> 项目文件夹 → 选择"在此处打开命令窗口"
+                        </p>
+                        <p style="color: #92400e; font-size: 13px;">
+                            <strong>方法2：</strong>复制项��文件夹路径，在 cmd 中输入：<code>cd 路径</code>
+                        </p>
+                    </div>
+                    <div class="code-box" style="font-size: 12px; color: #9ca3af;">
+                        例如：cd C:\Users\YourName\Desktop\skyriff
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-title">复制并执行启动命令</div>
+                </div>
+                <div style="margin-left: 44px;">
+                    <p style="color: #6b7280; font-size: 14px; margin-bottom: 8px;">
+                        点击复制按钮，然后粘贴到命令行，按回车：
+                    </p>
+                    <div class="code-box">
+                        <button class="copy-btn" onclick="copyCommand()">复制</button>
+                        <div id="command">cd server && npm install && npm start</div>
+                    </div>
+                    <p style="color: #6b7280; font-size: 12px; margin-top: 8px;">
+                        💡 如果是首次运行，npm install 可能需要 1-2 分钟
+                    </p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <div class="step-title">等待启动成功</div>
+                </div>
+                <div style="margin-left: 44px;">
+                    <p style="color: #6b7280; font-size: 14px; margin-bottom: 8px;">
+                        看到这个就成功了：
+                    </p>
+                    <div class="code-box" style="font-size: 12px;">
+🚀 SkyRiff Real API Server 已启动！<br>
+📡 服务地址: http://localhost:3001<br>
+✅ 准备就绪！
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn-primary" onclick="checkServer()">
+                🔄 检测服务器状态
+            </button>
+            
+            <div class="tip">
+                💡 <strong>提示：</strong>服务器启动后不要关闭命令行窗口。页面会自动检测服务器状态。
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 复制命令（使用兼容性更好的方法）
+        function copyCommand() {
+            const command = document.getElementById('command').textContent;
+            const textArea = document.createElement('textarea');
+            textArea.value = command;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                textArea.remove();
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = '已复制！';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '复制';
+                    btn.classList.remove('copied');
+                }, 2000);
+            } catch (err) {
+                console.error('复制失败:', err);
+                textArea.remove();
+                alert('自动复制失败，请手动复制命令：\n' + command);
+            }
+        }
+        
+        // 检查服务器状态
+        async function checkServer() {
+            const statusBadge = document.getElementById('status-badge');
+            const successMessage = document.getElementById('success-message');
+            
+            try {
+                const response = await fetch('http://localhost:3001/health', {
+                    method: 'GET',
+                    signal: AbortSignal.timeout(2000)
+                });
+                
+                if (response.ok) {
+                    statusBadge.className = 'status-badge status-online';
+                    statusBadge.innerHTML = '<span class="status-dot"></span><span>服务器在线</span>';
+                    successMessage.classList.add('show');
+                } else {
+                    throw new Error('Server not responding');
+                }
+            } catch (error) {
+                statusBadge.className = 'status-badge status-offline';
+                statusBadge.innerHTML = '<span class="status-dot"></span><span>服务器离线</span>';
+                successMessage.classList.remove('show');
+            }
+        }
+        
+        // 自动检测（每3秒）
+        setInterval(checkServer, 3000);
+        
+        // 页面加载时检测一次
+        checkServer();
+    </script>
+</body>
+</html>

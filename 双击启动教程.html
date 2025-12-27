@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>超简单！双击启动教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .header .emoji {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .step {
+            background: #f0fdf4;
+            border: 3px solid #10b981;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+        
+        .step-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #065f46;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+        
+        .step-content {
+            font-size: 16px;
+            color: #047857;
+            line-height: 1.8;
+        }
+        
+        .file-box {
+            background: #1e293b;
+            color: #10b981;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 700;
+            border: 2px solid #10b981;
+        }
+        
+        .icon-large {
+            font-size: 80px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .success-box {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .success-box pre {
+            background: #1e293b;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        
+        .warning-box {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .warning-box p {
+            color: #92400e;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 5px 0;
+        }
+        
+        .highlight {
+            background: #fef3c7;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            color: #92400e;
+        }
+        
+        .btn-large {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 16px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.2s;
+            text-align: center;
+            text-decoration: none;
+        }
+        
+        .btn-large:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        .folder-structure {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 20px 0;
+            color: #374151;
+        }
+        
+        .folder-structure .highlight-file {
+            color: #059669;
+            font-weight: 700;
+            background: #d1fae5;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="emoji">🚀</div>
+            <h1>超简单！双击启动教程</h1>
+            <p>只需 2 步，新手也能轻松搞定</p>
+        </div>
+        
+        <div class="content">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-title">找到这个文件</div>
+                <div class="step-content">
+                    <p>在项目文件夹中，找到这个文件：</p>
+                    <div class="file-box">
+                        🚀一键启动服务器.bat
+                    </div>
+                    <p>这个文件在项目的<span class="highlight">根目录</span>下（和 package.json、src 文件夹在同一层）</p>
+                    
+                    <div class="folder-structure">
+                        📁 项目文件夹/<br>
+                        &nbsp;&nbsp;├── <span class="highlight-file">🚀一键启动服务器.bat</span>  ← 就是它！<br>
+                        &nbsp;&nbsp;├── 📖完整启动教程.md<br>
+                        &nbsp;&nbsp;├── ✨超简单启动方法.txt<br>
+                        &nbsp;&nbsp;├── package.json<br>
+                        &nbsp;&nbsp;├── 📁 src/<br>
+                        &nbsp;&nbsp;├── 📁 server/<br>
+                        &nbsp;&nbsp;└── ...
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-title">双击这个文件</div>
+                <div class="step-content">
+                    <p>用鼠标<span class="highlight">左键双击</span>这个文件</p>
+                    <div class="icon-large">🖱️ → 💥</div>
+                    <p>会弹出一个黑色窗口，然后：</p>
+                    <ul style="margin-left: 30px; margin-top: 15px; line-height: 2;">
+                        <li>✅ 自动检查环境</li>
+                        <li>✅ 自动安装依赖（首次需要 1-2 分钟）</li>
+                        <li>✅ 自动启动服务器</li>
+                    </ul>
+                    <p style="margin-top: 20px; font-weight: 700; color: #065f46;">你什么都不用做，只需要等待！</p>
+                </div>
+            </div>
+            
+            <div class="success-box">
+                <h3 style="color: #065f46; font-size: 20px; margin-bottom: 15px;">✅ 成功标志</h3>
+                <p style="color: #047857; margin-bottom: 10px;">黑色窗口会显示：</p>
+                <pre>🚀 SkyRiff Real API Server 已启动！
+📡 服务地址: http://localhost:3001
+✅ 准备就绪！</pre>
+                <p style="color: #065f46; margin-top: 15px; font-weight: 700; font-size: 18px; text-align: center;">
+                    看到这个就成功了！🎉
+                </p>
+            </div>
+            
+            <div class="warning-box">
+                <h3 style="color: #92400e; font-size: 20px; margin-bottom: 10px;">⚠️ 重要提示</h3>
+                <p>1. 不要关闭那个黑色窗口！让它一直运行</p>
+                <p>2. 如果要停止服务器，在窗口中按 Ctrl+C</p>
+                <p>3. 下次启动：再次双击这个文件即可</p>
+            </div>
+            
+            <h2 style="font-size: 24px; color: #111827; margin-top: 40px; margin-bottom: 20px;">🌐 使用前端</h2>
+            
+            <div style="background: #f9fafb; border-radius: 16px; padding: 25px; border: 2px solid #e5e7eb;">
+                <ol style="margin-left: 20px; line-height: 2.5; font-size: 16px; color: #374151;">
+                    <li>回到浏览器</li>
+                    <li>按 <span class="highlight">F5</span> 刷新页面</li>
+                    <li>启动助手会显示 <span style="color: #10b981; font-weight: 700;">"✅ 服务器在线"</span></li>
+                    <li>点击 "我稍后启动" 关闭提示</li>
+                    <li>点击底部 "工作室" 按钮</li>
+                    <li>开始生成视频！🎬</li>
+                </ol>
+            </div>
+            
+            <a href="#" onclick="window.location.reload(); return false;" class="btn-large">
+                🔄 刷新页面，立即开始！
+            </a>
+            
+            <div style="text-align: center; margin-top: 30px; color: #6b7280;">
+                <p>找不到那个 .bat 文件？</p>
+                <p style="margin-top: 10px; font-weight: 600; color: #374151;">刷新浏览器预览，我刚刚创建了它！</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

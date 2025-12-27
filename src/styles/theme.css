@@ -1,0 +1,121 @@
+@import "tailwindcss";
+@import "./fonts.css";
+
+@theme {
+  /* Colors */
+  --color-primary: #0A84FF;
+  --color-secondary: #6C5CE7;
+  --color-success: #2ECC71;
+  --color-warning: #F1C40F;
+  --color-error: #E74C3C;
+  
+  --color-background: #000000;
+  --color-surface: #1C1C1E;
+  --color-surface-elevated: #2C2C2E;
+  --color-border: #38383A;
+  
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #ABABAB;
+  --color-text-tertiary: #6E6E73;
+
+  /* Radius */
+  --radius-button: 12px;
+  --radius-card: 16px;
+  --radius-sm: 8px;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'PingFang SC', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  writing-mode: horizontal-tb;
+  text-orientation: mixed;
+  direction: ltr;
+}
+
+* {
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+}
+
+/* 晃动动画 - 用于资产图标徽章 */
+@keyframes shake {
+  0%, 100% { transform: rotate(0deg); }
+  10%, 30%, 50%, 70%, 90% { transform: rotate(-5deg); }
+  20%, 40%, 60%, 80% { transform: rotate(5deg); }
+}
+
+.animate-shake {
+  animation: shake 3s ease-in-out infinite;
+}
+
+/* 可爱的旋转动画 - 用于创作按钮+号 */
+@keyframes cuteRotate {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(45deg) scale(1.1); }
+  100% { transform: rotate(90deg) scale(1); }
+}
+
+.animate-cute-rotate {
+  animation: cuteRotate 0.6s ease-in-out;
+  animation-iteration-count: 1;
+}
+
+/* 从底部滑入动画 - 用于键盘和创作界面 */
+@keyframes slideInFromBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideInFromBottom {
+  animation: slideInFromBottom 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+p {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+button {
+  font-family: inherit;
+}
